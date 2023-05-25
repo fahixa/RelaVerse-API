@@ -11,28 +11,57 @@ router.post('/', (req, res) => {
     if (err) {
       res.status(500).json({ error: 'Failed to connect to database' });
     } else {
-      bcrypt.genSalt(10, (err, salt) => {
-        if (err) {
-          res.status(500).json({ error: 'Failed to generate salt' });
-        } else {
-          bcrypt.hash(password, salt, (err,hash) => {
-            if (err) {
-              res.status(500).json({ error: 'Failed to hash password' });
-            } else {
-              const hashedPassword = hash;
+      const emailQuery = 'SELECT * FROM users WHERE email = ?';
+      const phoneQuery = 'SELECT * FROM users WHERE phone_number = ?';
 
-              const query = 'INSERT INTO users (name, phone_number, email, password) VALUES (?,?,?,?)';
-              connection.query(query, [name, phone_number, email, hashedPassword], (err, results) => {
+      connection.query(emailQuery, [email], (err, emailResults) => {
+        if (err) {
+          connection.release();
+          res.status(500).json({ error: 'Failed to execute query' });
+        } else {
+          if (emailResults.length > 0) {
+            connection.release();
+            res.status(409).json({ error: 'User with this email already exists' });
+          } else {
+            connection.query(phoneQuery, [phone_number], (err, phoneResults) => {
+              if (err) {
                 connection.release();
-                if (err) {
-                  res.status(500).json({ error: 'Failed to execute query' });
+                res.status(500).json({ error: 'Failed to execute query' });
+              } else {
+                if (phoneResults.length > 0) {
+                  connection.release();
+                  res.status(409).json({ error: 'User with this phone number already exists' });
                 } else {
-                  const token = jwt.sign({ id: results.insertId }, 'secret-key', { expiresIn: '1h' });
-                  res.status(201).json({ message: 'User registered successfully', token });
+                  bcrypt.genSalt(10, (err, salt) => {
+                    if (err) {
+                      connection.release();
+                      res.status(500).json({ error: 'Failed to generate salt' });
+                    } else {
+                      bcrypt.hash(password, salt, (err, hash) => {
+                        if (err) {
+                          connection.release();
+                          res.status(500).json({ error: 'Failed to hash password' });
+                        } else {
+                          const hashedPassword = hash;
+
+                          const insertQuery = 'INSERT INTO users (name, phone_number, email, password) VALUES (?,?,?,?)';
+                          connection.query(insertQuery, [name, phone_number, email, hashedPassword], (err, results) => {
+                            connection.release();
+                            if (err) {
+                              res.status(500).json({ error: 'Failed to execute query' });
+                            } else {
+                              const token = jwt.sign({ id: results.insertId }, 'secret-key', { expiresIn: '1h' });
+                              res.status(201).json({ message: 'User registered successfully', token });
+                            }
+                          });
+                        }
+                      });
+                    }
+                  });
                 }
-              });
-            }
-          });
+              }
+            });
+          }
         }
       });
     }
