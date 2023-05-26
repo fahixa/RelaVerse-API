@@ -107,6 +107,30 @@ router.put('/change-location/:id', verifyToken, (req, res) => {
   });
 });
 
+router.get('/:id', verifyToken, (req, res) => {
+  const userId = req.params.id;
+
+  pool.getConnection((err, connection) => {
+    if (err) {
+      res.status(500).json({ error: 'Failed to connect to database' });
+    } else {
+      const query = 'SELECT id, name, phone_number, email, latitude, longitude FROM users WHERE id = ?';
+      connection.query(query, [userId], (err, results) => {
+        connection.release();
+        if (err) {
+          res.status(500).json({ error: 'Failed to execute query' });
+        } else if (results.length === 0) {
+          res.status(404).json({ error: 'User not found' });
+        } else {
+          const user = results[0];
+          res.status(200).json({ user });
+        }
+      });
+    }
+  });
+});
+
+
 
 module.exports = router;
 
