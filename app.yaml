@@ -1,0 +1,12 @@
+runtime: nodejs16 
+service: relaverse-api
+
+env_variables:
+  NODE_ENV: production
+  PORT: 8080
+  VARIABLE_NAME: value
+
+handlers:
+  - url: /.*
+    script: auto
+    secure: always
