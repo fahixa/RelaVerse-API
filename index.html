@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>RelaVerse API Documentation</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <style>
+        body {
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        pre {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        #navbar {
+            position: fixed;
+            width: 250px;
+            height: 100%;
+            overflow-y: scroll;
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        #content {
+            margin-left: 300px;
+        }
+
+        .nav-link {
+            color: #2F4F4F !important;
+        }
+
+        .nav-link:hover {
+            color: #FF6347 !important;
+        }
+        
+        #endpoint a {
+            color: #2F4F4F;
+        }
+        
+        #endpoint a:hover {
+            color: #FF6347;
+        }
+    </style>
+</head>
+
+<body data-spy="scroll" data-target="#navbar" data-offset="50">
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="navbar" class="bd-sidebar">
+                <h1 class="my-4">List API</h1>
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link" href="#endpoint">Endpoint</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#register">Register</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#login">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#changePassword">Change Password</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#changeLocation">Change Location</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#getUserData">Get User Data</a></li>
+                </ul>
+            </nav>
+            <div id="content" class="col">
+                <h1 class="my-4">RelaVerse API Documentation</h1>
+                <div id="endpoint">
+                    <h2 class="my-4">Endpoint</h2>
+                    <p><a href="https://relaverse-api-dot-bangkit-386813.et.r.appspot.com">https://relaverse-api-dot-bangkit-386813.et.r.appspot.com</a></p>
+                </div>
+
+                <div id="register" class="card mb-4">
+                    <div class="card-body">
+                        <h2>Register</h2>
+                        <p><strong>URL</strong></p>
+                        <p><code>/api/register</code></p>
+                        <p><strong>Method</strong></p>
+                        <p><code>POST</code></p>
+                        <p><strong>Request Body</strong></p>
+                        <pre>
+    {
+        "name": "string",
+        "phone_number": "string",
+        "email": "string, must be unique",
+        "password": "string, must be at least 8 characters"
+    }
+                        </pre>
+                        <p><strong>Response</strong></p>
+                        <pre>
+    {
+        /* Response schema */
+    }
+                        </pre>
+                    </div>
+                </div>
+
+                <div id="login" class="card mb-4">
+                    <div class="card-body">
+                        <h2>Login</h2>
+                        <p><strong>URL</strong></p>
+                        <p><code>/api/login</code></p>
+                        <p><strong>Method</strong></p>
+                        <p><code>POST</code></p>
+                        <p><strong>Request Body</strong></p>
+                        <pre>
+    {
+        "email" : "string",
+        "password" : "string"
+    }
+                        </pre>
+                        <p><strong>Response</strong></p>
+                        <pre>
+    {
+        /* Response schema */
+    }
+                        </pre>
+                    </div>
+                </div>
+
+                <div id="changePassword" class="card mb-4">
+                    <div class="card-body">
+                        <h2>Change Password</h2>
+                        <p><strong>URL</strong></p>
+                        <p><code>/api/users/change-password/:id</code></p>
+                        <p><strong>Method</strong></p>
+                        <p><code>PUT</code></p>
+                        <p><strong>Request Body</strong></p>
+                        <pre>
+    {
+        "currentPassword" : "string",
+        "newPassword" : "string"
+    }
+                        </pre>
+                        <p><strong>Note</strong></p>
+                        <p><code>Include authorization token in headers.</code></p>
+                        <p><strong>Response</strong></p>
+                        <pre>
+    {
+        /* Response schema */
+    }
+                        </pre>
+                    </div>
+                </div>
+
+                <div id="changeLocation" class="card mb-4">
+                    <div class="card-body">
+                        <h2>Change Location</h2>
+                        <p><strong>URL</strong></p>
+                        <p><code>/api/users/change-location/:id</code></p>
+                        <p><strong>Method</strong></p>
+                        <p><code>PUT</code></p>
+                        <p><strong>Request Body</strong></p>
+                        <pre>
+    {
+        "latitude": "number",
+        "longitude": "number"
+    }
+                        </pre>
+                        <p><strong>Note</strong></p>
+                        <p><code>Include authorization token in headers.</code></p>
+                        <p><strong>Response</strong></p>
+                        <pre>
+    {
+        /* Response schema */
+    }
+                        </pre>
+                    </div>
+                </div>
+
+                <div id="getUserData" class="card mb-4">
+                    <div class="card-body">
+                        <h2>Get User Data</h2>
+                            <p><strong>URL</strong></p>
+                            <p><code>/api/users/:id</code></p>
+                            <p><strong>Method</strong></p>
+                            <p><code>GET</code></p>
+                            <p><strong>Note</strong></p>
+                            <p><code>Include authorization token in headers.</code></p>
+                            <p><strong>Response</strong></p>
+                            <pre>
+    {
+            /* Response schema */
+    }
+                            </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>
