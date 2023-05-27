@@ -1,2 +1,7 @@
-# Login-RegisterRelaverse-API
-Api untuk login dan register Relaverse Mobile
+# RelaVerse API
+List API :
+Register
+Login
+Change Password
+Change Location
+Get User Data
