@@ -1,7 +1,7 @@
 # RelaVerse API
 List API :
-Register
-Login
-Change Password
-Change Location
-Get User Data
+<br>Register</br>
+<br>Login</br>
+<br>Change Password</br>
+<br>Change Location</br>
+<br>Get User Data</br>
