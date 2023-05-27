@@ -133,7 +133,7 @@ router.post('/', upload.single('photoEvent'),verifyToken, async (req, res, next)
 router.get('/all', verifyToken, (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) {
-      res.status(500).json({ error: true, message: 'Failed to connect to database' });
+      res.status(500).json({ error: true, message: 'Failed to connect to database', detail: err.message });
     } else {
       const query = 'SELECT id, title, name, userId, photoEvent, latitude as lat, longitude as lon, contact, description, date FROM campaigns';
 
@@ -141,14 +141,14 @@ router.get('/all', verifyToken, (req, res) => {
         connection.release();
 
         if (err) {
-          res.status(500).json({ error: true, message: 'Failed to execute query', error_details: err });
+          res.status(500).json({ error: true, message: 'Failed to execute query', error_details: err.message });
         } else {
           const campaigns = results.map((row) => {
             row.lat = row.lat ? row.lat : null;
             row.lon = row.lon ? row.lon : null;
             return row;
           });
-          res.status(200).json({ error: false, campaigns });
+          res.status(200).json({ error: false, message: 'Successfully fetched all campaigns', campaigns });
         }
       });
     }
@@ -158,7 +158,7 @@ router.get('/all', verifyToken, (req, res) => {
 router.get('/:campaignId', verifyToken, (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) {
-      res.status(500).json({ error: true, message: 'Failed to connect to database' });
+      res.status(500).json({ error: true, message: 'Failed to connect to database', detail: err.message });
     } else {
       const query = 'SELECT id, title, name, userId, photoEvent, latitude as lat, longitude as lon, contact, description, date FROM campaigns WHERE id = ?';
 
@@ -166,14 +166,14 @@ router.get('/:campaignId', verifyToken, (req, res) => {
         connection.release();
 
         if (err) {
-          res.status(500).json({ error: true, message: 'Failed to execute query', error_details: err });
+          res.status(500).json({ error: true, message: 'Failed to execute query', error_details: err.message });
         } else if (results.length === 0) {
           res.status(404).json({ error: true, message: 'Campaign not found' });
         } else {
           const campaign = results[0];
           campaign.lat = campaign.lat ? campaign.lat : null;
           campaign.lon = campaign.lon ? campaign.lon : null;
-          res.status(200).json({ error: false, campaign });
+          res.status(200).json({ error: false, message: 'Successfully fetched campaign', campaign });
         }
       });
     }
