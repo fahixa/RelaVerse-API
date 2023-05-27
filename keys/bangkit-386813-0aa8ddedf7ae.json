@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "bangkit-386813",
+  "private_key_id": "0aa8ddedf7ae59d7ce47f77dd39979dc477d2262",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDBmapg2yKBFMku\nmkkKNwWsjSZ7chzmHNmQAUoos7WutdPymt312rMI9pPZ4YJGOWf6ND4DZTMdew2O\nevDrta5cfCDLjNDJDD7zkxRPj0WtuZ4BE7sI70i/a8APTf4BkcuF7Eg8ba72Jrk0\n7hKVqnCSNuVuAm6/EG5ceKWTH2bbG9AGU/lvN1txWz59pvyTbd0NmHXPMcdw0uId\nIovLxEARhQqj6GDaSIJMi+03aCqmMbTwpUm48GAje57gI1pXSbdTvJ8/ADepSFVK\nmi+LLP0PE2O7W7mgugm9jljmgsyE1gs4gHWqOflyY/5qGXQq3ILdcWd+uC/bfcPB\nUK+8ZhGXAgMBAAECggEAAMwb6WuaaaytVwdLCLZvfz8fkVkuQq/yVDqYVLDH+hDr\nbzxxcJGp57E+rG8jOBw30BrgX7Q0sMjkDLOqtu9kte9lVS4RyA1h9WMKlBKAR3X6\niOeZzBbsL+AHBo+CkPzjbGKr03yu862QjExbGdZ9wZeY4n1l3/Yp3JcHzrwA31ZT\nc6nN7RzflMh2zdTal3cPI+eK4fzsxovRFGvAHiFHYUjzsXLr4J3qRE3zMmw4PlhR\nWZyCuSG4TDbgkcm3ZYMu7CA2Rd3sFyjC4Cf3cQiap6+c9MyNMGxe87R2fIb9iw63\nmQLqVwmSDVlnUlBdkaTxaLk1H1euRbVB6jw8eoZ0OQKBgQDfvpo0FUekSvtUN9Mt\nl17tcgAG7EbaR7mL38LWwn3YkbudL1fjJO3X7PLmrYqIsHd1s9uz3RhtPOD3+c4v\n1MfUNHdOirPaC4Ezoe/j63A9Sr/dyFr7//mypLVdEPFe5g+13TYcn9jq4cB/anjc\n80Ksf9RzAFNMBi9I0DMa3Y2LeQKBgQDdgpL8ujWgJIeTHCIh9dhMHvqdbcVOOC/7\nPjLmwZJenhvHLr21ojOaU0BW5v4ac+ompMfAHyVpz2O/yJAtbDydHT8ObJiqXhWi\nWpBPCdTBxKQbCrVAWuKCd2Yg7g+zkvTB7sUI7+fxha2T8ZoP861TaOJvwE/Ruj7/\ndD6Te/sxjwKBgHgDU9FWDLyKX6831nVg+VEh0fPkrsiMqnDlkCwD3N7apKjWaSz0\ndQNaHJwxP9q71Qf0dodOs7h8bCt2+ercFmez0L73VStC+oWIehVmBylJPAspWexL\nzFLPWFzYJrABdTHWuxy1fPPYLZnqsXPKo9vFIV6iMQvZUWmcC52Ac1j5AoGAWDkH\nPe0UKqIh9S+BULFP4pF8E3OC3/J0+cX+E/YIy/KA8cXl/Q+LKe36dCIwFm0QVy/N\n9vDwv8G/4sSI1+6B/bmGQcJy03gBedZEH5a0zC/7hGGxat5H1NqlLHxkeIsRPKRS\niYqzgHhTd9cEG1JcOBpQBV487DUXnjq4KZl5pHUCgYAPxWiJvMSfB1yDsCvk+Zde\nV0aZNVA9xYXdjP2a7qVDzYnF0nAGtao/wsS7jwsEZeOqOnTLx2pFe7LZbKOmTsaZ\nU5EfPgLaNON7bDUGtGst8Na657dhMGeEHGWtjGjWXA30RrUy1zCV1kYCFXbq5cVH\nCKDImW6Y65+9Vch8U9V1cg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "relaverse-bucket@bangkit-386813.iam.gserviceaccount.com",
+  "client_id": "110656795949110434320",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/relaverse-bucket%40bangkit-386813.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
