@@ -14,13 +14,13 @@ const storage = multer.diskStorage({
     const now = new Date().toISOString().replace(/:/g, "-");
     const filename = now + file.originalname;
 
-    fs.access('./uploads/' + filename, fs.constants.F_OK, (err) => {
-      if(err) {
-        cb(null, filename);
-      } else {
-        cb(new Error('File with this name already exists'));
-      }
-    });
+    // fs.access('./uploads/' + filename, fs.constants.F_OK, (err) => {
+    //   if(err) {
+    //     cb(null, filename);
+    //   } else {
+    //     cb(new Error('File with this name already exists'));
+    //   }
+    // });
   }
 });
 
