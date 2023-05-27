@@ -130,4 +130,54 @@ router.post('/', upload.single('photoEvent'),verifyToken, async (req, res, next)
   }
 });
 
+router.get('/all', verifyToken, (req, res) => {
+  pool.getConnection((err, connection) => {
+    if (err) {
+      res.status(500).json({ error: true, message: 'Failed to connect to database' });
+    } else {
+      const query = 'SELECT id, title, name, userId, photoEvent, latitude as lat, longitude as lon, contact, description, date FROM campaigns';
+
+      connection.query(query, (err, results) => {
+        connection.release();
+
+        if (err) {
+          res.status(500).json({ error: true, message: 'Failed to execute query', error_details: err });
+        } else {
+          const campaigns = results.map((row) => {
+            row.lat = row.lat ? row.lat : null;
+            row.lon = row.lon ? row.lon : null;
+            return row;
+          });
+          res.status(200).json({ error: false, campaigns });
+        }
+      });
+    }
+  });
+});
+
+router.get('/:campaignId', verifyToken, (req, res) => {
+  pool.getConnection((err, connection) => {
+    if (err) {
+      res.status(500).json({ error: true, message: 'Failed to connect to database' });
+    } else {
+      const query = 'SELECT id, title, name, userId, photoEvent, latitude as lat, longitude as lon, contact, description, date FROM campaigns WHERE id = ?';
+
+      connection.query(query, [req.params.campaignId], (err, results) => {
+        connection.release();
+
+        if (err) {
+          res.status(500).json({ error: true, message: 'Failed to execute query', error_details: err });
+        } else if (results.length === 0) {
+          res.status(404).json({ error: true, message: 'Campaign not found' });
+        } else {
+          const campaign = results[0];
+          campaign.lat = campaign.lat ? campaign.lat : null;
+          campaign.lon = campaign.lon ? campaign.lon : null;
+          res.status(200).json({ error: false, campaign });
+        }
+      });
+    }
+  });
+});
+
 module.exports = router;
