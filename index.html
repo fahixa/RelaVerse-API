@@ -56,6 +56,13 @@
         #endpoint a:hover {
             color: #FF6347;
         }
+
+        .anchor:before {
+            content: "";
+            display: block;
+            height: 70px; /* sesuaikan dengan tinggi navbar Anda */
+            margin: -70px 0 0; /* nilainya harus negatif dan sama dengan height */
+        }
     </style>
 </head>
 
@@ -78,7 +85,7 @@
             </nav>
             <div id="content" class="col">
                 <h1 class="my-4">RelaVerse API Documentation</h1>
-                <div id="endpoint">
+                <div id="endpoint" class="anchor">
                     <h2 class="my-4">Endpoint</h2>
                     <p><a href="https://relaverse-api-dot-bangkit-386813.et.r.appspot.com">https://relaverse-api-dot-bangkit-386813.et.r.appspot.com</a></p>
                 </div>
@@ -104,13 +111,13 @@
     {
         "error": false,
         "message": "User registered successfully",
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNjg1MjYxNTA2LCJleHAiOjE2ODUyNjUxMDZ9.uQFybous7aG63tRVHKLFoAkEgzggtMQbljw2AmVNwoQ"
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNjg1MjYxNTAxxxxxxxx"
     }
                         </pre>
                     </div>
                 </div>
 
-                <div id="login" class="card mb-4">
+                <div id="login" class="card mb-4 anchor">
                     <div class="card-body">
                         <h2>Login</h2>
                         <p><strong>URL</strong></p>
@@ -129,7 +136,7 @@
     {
         "error": false,
         "message": "Login successful",
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNjg1MjYxNTg4LCJleHAiOjE2ODUyNjUxODh9.c69TcHG1xrb1K_jnl_8yPPjW_pr2zoafyIHjJl29y7c",
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNjg1MjYxNTAxxxxxxxx",
         "user": {
             "id": 9,
             "name": "Testing",
@@ -144,7 +151,7 @@
                     </div>
                 </div>
 
-                <div id="changePassword" class="card mb-4">
+                <div id="changePassword" class="card mb-4 anchor">
                     <div class="card-body">
                         <h2>Change Password</h2>
                         <p><strong>URL</strong></p>
@@ -170,7 +177,7 @@
                     </div>
                 </div>
 
-                <div id="changeLocation" class="card mb-4">
+                <div id="changeLocation" class="card mb-4 anchor">
                     <div class="card-body">
                         <h2>Change Location</h2>
                         <p><strong>URL</strong></p>
@@ -196,7 +203,7 @@
                     </div>
                 </div>
 
-                <div id="getUserData" class="card mb-4">
+                <div id="getUserData" class="card mb-4 anchor">
                     <div class="card-body">
                         <h2>Get User Data</h2>
                             <p><strong>URL</strong></p>
@@ -223,7 +230,7 @@
                     </div>
                 </div>
 
-                <div id="createCampaign" class="card mb-4">
+                <div id="createCampaign" class="card mb-4 anchor">
                     <div class="card-body">
                         <h2>Create Campaign</h2>
                             <p><strong>URL</strong></p>
@@ -256,7 +263,7 @@
                     </div>
                 </div>
 
-                <div id="getAllCampaign" class="card mb-4">
+                <div id="getAllCampaign" class="card mb-4 anchor">
                     <div class="card-body">
                         <h2>Get All Campaign</h2>
                             <p><strong>URL</strong></p>
@@ -300,7 +307,7 @@
                     </div>
                 </div>
 
-                <div id="getCampaignId" class="card mb-4">
+                <div id="getCampaignId" class="card mb-4 anchor">
                     <div class="card-body">
                         <h2>Get Campaign ID</h2>
                             <p><strong>URL</strong></p>
