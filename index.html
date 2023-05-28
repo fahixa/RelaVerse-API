@@ -71,6 +71,9 @@
                     <li class="nav-item"><a class="nav-link" href="#changePassword">Change Password</a></li>
                     <li class="nav-item"><a class="nav-link" href="#changeLocation">Change Location</a></li>
                     <li class="nav-item"><a class="nav-link" href="#getUserData">Get User Data</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#createCampaign">Create Campaign</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#getAllCampaign">Get All Campaign</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#getCampaignId">Get Campaign ID</a></li>
                 </ul>
             </nav>
             <div id="content" class="col">
@@ -183,6 +186,67 @@
                         <h2>Get User Data</h2>
                             <p><strong>URL</strong></p>
                             <p><code>/api/users/:id</code></p>
+                            <p><strong>Method</strong></p>
+                            <p><code>GET</code></p>
+                            <p><strong>Note</strong></p>
+                            <p><code>Include authorization token in headers.</code></p>
+                            <p><strong>Response</strong></p>
+                            <pre>
+    {
+            /* Response schema */
+    }
+                            </pre>
+                    </div>
+                </div>
+
+                <div id="createCampaign" class="card mb-4">
+                    <div class="card-body">
+                        <h2>Create Campaign</h2>
+                            <p><strong>URL</strong></p>
+                            <p><code>/api/campaign</code></p>
+                            <p><strong>Method</strong></p>
+                            <p><code>POST</code></p>
+                            <p><strong>Request Body</strong></p>
+                            <pre>
+        {
+            "currentPassword" : "string",
+            "newPassword" : "string"
+        }
+                            </pre>
+                            <p><strong>Note</strong></p>
+                            <p><code>Include authorization token in headers.</code></p>
+                            <p><strong>Response</strong></p>
+                            <pre>
+    {
+            /* Response schema */
+    }
+                            </pre>
+                    </div>
+                </div>
+
+                <div id="checkCampaign" class="card mb-4">
+                    <div class="card-body">
+                        <h2>Get All Campaign</h2>
+                            <p><strong>URL</strong></p>
+                            <p><code>/api/campaign/all</code></p>
+                            <p><strong>Method</strong></p>
+                            <p><code>GET</code></p>
+                            <p><strong>Note</strong></p>
+                            <p><code>Include authorization token in headers.</code></p>
+                            <p><strong>Response</strong></p>
+                            <pre>
+    {
+            /* Response schema */
+    }
+                            </pre>
+                    </div>
+                </div>
+
+                <div id="checkCampaignId" class="card mb-4">
+                    <div class="card-body">
+                        <h2>Get Campaign ID</h2>
+                            <p><strong>URL</strong></p>
+                            <p><code>/api/campaign/:campaignId</code></p>
                             <p><strong>Method</strong></p>
                             <p><code>GET</code></p>
                             <p><strong>Note</strong></p>
