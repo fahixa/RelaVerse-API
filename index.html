@@ -102,7 +102,9 @@
                         <p><strong>Response</strong></p>
                         <pre>
     {
-        /* Response schema */
+        "error": false,
+        "message": "User registered successfully",
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNjg1MjYxNTA2LCJleHAiOjE2ODUyNjUxMDZ9.uQFybous7aG63tRVHKLFoAkEgzggtMQbljw2AmVNwoQ"
     }
                         </pre>
                     </div>
@@ -125,7 +127,18 @@
                         <p><strong>Response</strong></p>
                         <pre>
     {
-        /* Response schema */
+        "error": false,
+        "message": "Login successful",
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNjg1MjYxNTg4LCJleHAiOjE2ODUyNjUxODh9.c69TcHG1xrb1K_jnl_8yPPjW_pr2zoafyIHjJl29y7c",
+        "user": {
+            "id": 9,
+            "name": "Testing",
+            "phone_number": "08xxxxxxxxx",
+            "email": "tes@gmail.com",
+            "password": "$2a$10$hW2PDXK7APikobYgRsMe6Ov6D2iPyyVJlD52XABmfnktk/HiEp7uy",
+            "latitude": null,
+            "longitude": null
+        }
     }
                         </pre>
                     </div>
@@ -150,7 +163,8 @@
                         <p><strong>Response</strong></p>
                         <pre>
     {
-        /* Response schema */
+        "error": false,
+        "message": "Password updated successfully"
     }
                         </pre>
                     </div>
@@ -175,7 +189,8 @@
                         <p><strong>Response</strong></p>
                         <pre>
     {
-        /* Response schema */
+        "error": false,
+        "message": "Location updated successfully"
     }
                         </pre>
                     </div>
@@ -193,7 +208,16 @@
                             <p><strong>Response</strong></p>
                             <pre>
     {
-            /* Response schema */
+        "error": false,
+        "message": "User data retrieved successfully",
+        "user": {
+            "id": 9,
+            "name": "Testing",
+            "phone_number": "08xxxxxxxxx",
+            "email": "tes@gmail.com",
+            "latitude": -6.973526,
+            "longitude": 107.632598
+        }
     }
                             </pre>
                     </div>
@@ -208,17 +232,25 @@
                             <p><code>POST</code></p>
                             <p><strong>Request Body</strong></p>
                             <pre>
-        {
-            "currentPassword" : "string",
-            "newPassword" : "string"
-        }
+    {
+        "title": "string",
+        "name": "string",
+        "userId": number,
+        "latitude": number,
+        "longitude": number,
+        "contact": "string",
+        "description": "string",
+        "date": "string",
+        "photoEvent": file
+    }
                             </pre>
                             <p><strong>Note</strong></p>
                             <p><code>Include authorization token in headers.</code></p>
                             <p><strong>Response</strong></p>
                             <pre>
     {
-            /* Response schema */
+        "error": false,
+        "message": "Campaign created successfully"
     }
                             </pre>
                     </div>
@@ -236,7 +268,33 @@
                             <p><strong>Response</strong></p>
                             <pre>
     {
-            /* Response schema */
+        "error": false,
+        "message": "Successfully fetched all campaigns",
+        "campaigns": [
+            {
+                "id": 2,
+                "title": "Relawan Sungai Wakanda",
+                "name": "hasibuan",
+                "userId": 6,
+                "photoEvent": "https://storage.googleapis.com/relaverse/1685222251181-images.jpeg",
+                "lat": -2.113523,
+                "lon": -1.631312,
+                "contact": "08119273405",
+                "description": "sungai wakanda",
+                "date": "2023-05-28T00:00:00.000Z"
+            },
+            {
+                "id": 3,
+                "title": "Relawan Sungai Bangkit",
+                "name": "testing",
+                "userId": 9,
+                "photoEvent": "https://storage.googleapis.com/relaverse/1685262224838-img.jpg",
+                "lat": -3.131251,
+                "lon": -2.352212,
+                "contact": "08xxxxxxxxxx",
+                "description": "sungai bangkit",
+                "date": "2023-05-29T00:00:00.000Z"
+            }
     }
                             </pre>
                     </div>
@@ -254,7 +312,20 @@
                             <p><strong>Response</strong></p>
                             <pre>
     {
-            /* Response schema */
+        "error": false,
+        "message": "Successfully fetched campaign",
+        "campaign": {
+            "id": 3,
+            "title": "Relawan Sungai Bangkit",
+            "name": "testing",
+            "userId": 9,
+            "photoEvent": "https://storage.googleapis.com/relaverse/1685262224838-img.jpg",
+            "lat": -3.131251,
+            "lon": -2.352212,
+            "contact": "08xxxxxxxxxx",
+            "description": "sungai bangkit",
+            "date": "2023-05-29T00:00:00.000Z"
+        }
     }
                             </pre>
                     </div>
