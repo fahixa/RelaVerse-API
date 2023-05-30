@@ -180,7 +180,6 @@ router.get('/:campaignId', verifyToken, (req, res) => {
   });
 });
 
-<<<<<<< HEAD
 // Add the following route handler below the existing code in the file
 router.post('/volunteer/:campaignId', verifyToken, (req, res) => {
   const campaignId = req.params.campaignId;
@@ -374,6 +373,4 @@ router.get('/volunteer/:userId', verifyToken, (req, res) => {
 
 
 
-=======
->>>>>>> 51f80ce868790ce4210daf8b0cbea4568772edf7
 module.exports = router;
