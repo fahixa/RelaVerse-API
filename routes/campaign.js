@@ -180,4 +180,197 @@ router.get('/:campaignId', verifyToken, (req, res) => {
   });
 });
 
+// Add the following route handler below the existing code in the file
+router.post('/volunteer/:campaignId', verifyToken, (req, res) => {
+  const campaignId = req.params.campaignId;
+  const userId = req.userId;
+
+  // Check if the campaign exists
+  pool.query('SELECT * FROM campaigns WHERE id = ?', [campaignId], (err, campaignResults) => {
+    if (err) {
+      return res.status(500).json({ error: true, message: 'Failed to execute query' });
+    }
+    if (campaignResults.length === 0) {
+      return res.status(404).json({ error: true, message: 'Campaign not found' });
+    }
+
+    // Check if the user exists
+    pool.query('SELECT * FROM users WHERE id = ?', [userId], (err, userResults) => {
+      if (err) {
+        return res.status(500).json({ error: true, message: 'Failed to execute query' });
+      }
+      if (userResults.length === 0) {
+        return res.status(404).json({ error: true, message: 'User not found' });
+      }
+
+      // Check if the user is already a participant
+      pool.query(
+        'SELECT * FROM campaign_participants WHERE campaign_id = ? AND user_id = ?',
+        [campaignId, userId],
+        (err, participantResults) => {
+          if (err) {
+            return res.status(500).json({ error: true, message: 'Failed to execute query' });
+          }
+          if (participantResults.length > 0) {
+            return res.status(400).json({ error: true, message: 'User is already a participant' });
+          }
+
+          // Add the user as a participant
+          pool.query(
+            'INSERT INTO campaign_participants (campaign_id, user_id) VALUES (?, ?)',
+            [campaignId, userId],
+            (err) => {
+              if (err) {
+                return res.status(500).json({ error: true, message: 'Failed to execute query' });
+              }
+
+              return res.status(200).json({ error: false, message: 'Joined the campaign successfully' });
+            }
+          );
+        }
+      );
+    });
+  });
+});
+
+router.get('/joined/:campaignId', verifyToken, (req, res) => {
+  const campaignId = req.params.campaignId;
+  const userId = req.userId;
+
+  // Check if the campaign exists
+  pool.query('SELECT * FROM campaigns WHERE id = ?', [campaignId], (err, campaignResults) => {
+    if (err) {
+      return res.status(500).json({ error: true, message: 'Failed to execute query' });
+    }
+    if (campaignResults.length === 0) {
+      return res.status(404).json({ error: true, message: 'Campaign not found' });
+    }
+
+    // Get the campaign details
+    const campaign = campaignResults[0];
+    const { id, latitude, longitude } = campaign;
+
+    // Check if the user is a participant
+    pool.query(
+      'SELECT users.id AS userId, users.name FROM campaign_participants JOIN users ON campaign_participants.user_id = users.id WHERE campaign_participants.campaign_id = ?',
+      [campaignId],
+      (err, participantResults) => {
+        if (err) {
+          return res.status(500).json({ error: true, message: 'Failed to execute query' });
+        }
+
+        const userList = participantResults.map((participant) => ({
+          userId: participant.userId,
+          name: participant.name,
+        }));
+
+        return res.status(200).json({
+          error: false,
+          message: 'Campaign details fetched successfully',
+          campaignId: id,
+          latitude,
+          longitude,
+          userList,
+        });
+      }
+    );
+  });
+});
+
+router.get('/joined/:campaignId/get', verifyToken, (req, res) => {
+  const campaignId = req.params.campaignId;
+  const userId = req.userId;
+
+  // Check if the campaign exists
+  pool.query('SELECT * FROM campaigns WHERE id = ?', [campaignId], (err, campaignResults) => {
+    if (err) {
+      return res.status(500).json({ error: true, message: 'Failed to execute query' });
+    }
+    if (campaignResults.length === 0) {
+      return res.status(404).json({ error: true, message: 'Campaign not found' });
+    }
+
+    // Get the campaign details
+    const campaign = campaignResults[0];
+    const { id, latitude, longitude } = campaign;
+
+    // Check if the user is a participant
+    pool.query(
+      'SELECT users.id AS userId, users.name FROM campaign_participants JOIN users ON campaign_participants.user_id = users.id WHERE campaign_participants.campaign_id = ?',
+      [campaignId],
+      (err, participantResults) => {
+        if (err) {
+          return res.status(500).json({ error: true, message: 'Failed to execute query' });
+        }
+
+        const userList = participantResults.map((participant) => ({
+          userId: participant.userId,
+          name: participant.name,
+        }));
+
+        return res.status(200).json({
+          error: false,
+          message: 'Campaign details fetched successfully',
+          campaignId: id,
+          latitude,
+          longitude,
+          userList,
+        });
+      }
+    );
+  });
+});
+
+router.get('/volunteer/:userId', verifyToken, (req, res) => {
+  const userId = req.params.userId;
+
+  // Check if the user exists
+  pool.query('SELECT * FROM users WHERE id = ?', [userId], (err, userResults) => {
+    if (err) {
+      return res.status(500).json({ error: true, message: 'Failed to execute query' });
+    }
+    if (userResults.length === 0) {
+      return res.status(404).json({ error: true, message: 'User not found' });
+    }
+
+    // Get the user's volunteer events
+    const query = `
+      SELECT
+        c.id AS campaigntId,
+        c.title AS campaignTitle,
+        c.name AS campaigntName,
+        c.userId AS campaignCreatorId,
+        c.photoEvent AS campaignPhoto,
+        c.latitude AS campaignLat,
+        c.longitude AS campaignLon,
+        c.contact AS campaignContact,
+        c.description AS campaignDescription,
+        c.date AS campaignDate
+      FROM
+        campaign_participants AS cp
+        JOIN campaigns AS c ON cp.campaign_id = c.id
+      WHERE
+        cp.user_id = ?;
+    `;
+
+    pool.query(query, [userId], (err, eventResults) => {
+      if (err) {
+        return res.status(500).json({ error: true, message: 'Failed to execute query' });
+      }
+
+      const userData = {
+        userId: userResults[0].id,
+        name: userResults[0].name,
+        eventList: eventResults,
+      };
+
+      res.status(200).json({ error: false, message: 'User volunteer data retrieved successfully', userData });
+    });
+  });
+});
+
+
+
+
+
 module.exports = router;
