@@ -37,14 +37,16 @@ const campaignSchema = Joi.object({
   longitude: Joi.number().required(),
   contact: Joi.string().required(),
   description: Joi.string().required(),
-  date: Joi.date().required()
+  date: Joi.date().required(),
+  location: Joi.string().required(),
+  whatsappLink: Joi.string().required()
 });
 
-router.post('/', upload.single('photoEvent'),verifyToken, async (req, res, next) => {
+router.post('/', upload.single('photoEvent'), verifyToken, async (req, res, next) => {
   try {
-    const { title, name, userId, latitude, longitude, contact, description, date } = req.body;
-    
-    const { error } = campaignSchema.validate({ title, name, userId, latitude, longitude, contact, description, date });
+    const { title, name, userId, latitude, longitude, contact, description, date, location, whatsappLink } = req.body;
+
+    const { error } = campaignSchema.validate({ title, name, userId, latitude, longitude, contact, description, date, location, whatsappLink });
     if (error) {
       return res.status(400).json({ error: true, message: error.details[0].message });
     }
@@ -83,13 +85,14 @@ router.post('/', upload.single('photoEvent'),verifyToken, async (req, res, next)
         if (err) {
           console.error('Failed to connect to database', err);
           return res.status(500).json({ error: true, message: 'Failed to connect to database' });
-        } else {
+        }
+    
         const query = 'SELECT * FROM campaigns WHERE title = ?';
         connection.query(query, [title], (err, results) => {
           if (err) {
             connection.release();
             res.status(500).json({ error: true, message: 'Failed to execute query', error_details: err });
-          } else if(results.length > 0) {
+          } else if (results.length > 0) {
             connection.release();
             res.status(400).json({ error: true, message: 'Campaign title already exists. Please choose a different title.' });
           } else {
@@ -103,16 +106,16 @@ router.post('/', upload.single('photoEvent'),verifyToken, async (req, res, next)
                 res.status(400).json({ error: true, message: 'Invalid userId - Foreign key constraint failed' });
               } else {
                 const user = results[0];
-            
+    
                 if (user.id !== req.userId) {
                   connection.release();
                   res.status(401).json({ error: true, message: 'Unauthorized' });
                 } else {
-                  const insertQuery = 'INSERT INTO campaigns (title, name, userId, latitude, longitude, contact, description, date, photoEvent) VALUES (?,?,?,?,?,?,?,?,?)';
-                  connection.query(insertQuery, [title, name, userId, latitude, longitude, contact, description, date, photoEvent], (err, results) => {
+                  const insertQuery = 'INSERT INTO campaigns (title, name, userId, latitude, longitude, contact, description, date, photoEvent, location, whatsappLink) VALUES (?,?,?,?,?,?,?,?,?,?,?)';
+                  connection.query(insertQuery, [title, name, userId, latitude, longitude, contact, description, date, photoEvent, location, whatsappLink], (err, results) => {
                     connection.release();
-                    if(err) {
-                      res.status(500).json({ error: true, message: 'Failed to executequery', error_details: err });
+                    if (err) {
+                      res.status(500).json({ error: true, message: 'Failed to execute query', error_details: err });
                     } else {
                       res.status(201).json({ error: false, message: 'Campaign created successfully' });
                     }
@@ -122,9 +125,9 @@ router.post('/', upload.single('photoEvent'),verifyToken, async (req, res, next)
             });
           }
         });
-      }
-    });
-  } }catch (err) {
+      });
+    }
+    }catch (err) {
     console.error('An error occurred', err);
     return res.status(500).json({ error: true, message: 'An error occurred while processing your request' });
   }
@@ -135,7 +138,7 @@ router.get('/all', verifyToken, (req, res) => {
     if (err) {
       res.status(500).json({ error: true, message: 'Failed to connect to database', detail: err.message });
     } else {
-      const query = 'SELECT id, title, name, userId, photoEvent, latitude as lat, longitude as lon, contact, description, date FROM campaigns';
+      const query = 'SELECT id, title, name, userId, photoEvent, latitude as lat, longitude as lon, contact, description, date, location, whatsappLink FROM campaigns';
 
       connection.query(query, (err, results) => {
         connection.release();
@@ -155,12 +158,13 @@ router.get('/all', verifyToken, (req, res) => {
   });
 });
 
+
 router.get('/:campaignId', verifyToken, (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) {
       res.status(500).json({ error: true, message: 'Failed to connect to database', detail: err.message });
     } else {
-      const query = 'SELECT id, title, name, userId, photoEvent, latitude as lat, longitude as lon, contact, description, date FROM campaigns WHERE id = ?';
+      const query = 'SELECT id, title, name, userId, photoEvent, latitude as lat, longitude as lon, contact, description, date, location, whatsappLink FROM campaigns WHERE id = ?';
 
       connection.query(query, [req.params.campaignId], (err, results) => {
         connection.release();
@@ -179,6 +183,7 @@ router.get('/:campaignId', verifyToken, (req, res) => {
     }
   });
 });
+
 
 // Add the following route handler below the existing code in the file
 router.post('/volunteer/:campaignId', verifyToken, (req, res) => {
