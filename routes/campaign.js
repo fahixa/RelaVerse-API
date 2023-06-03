@@ -138,7 +138,7 @@ router.get('/all', verifyToken, (req, res) => {
     if (err) {
       res.status(500).json({ error: true, message: 'Failed to connect to database', detail: err.message });
     } else {
-      const query = 'SELECT id, title, name, userId, photoEvent, latitude as lat, longitude as lon, contact, description, date, location, whatsappLink FROM campaigns';
+      const query = 'SELECT id, title, name, userId, photoEvent, latitude as lat, longitude as lon, contact, description, date, location, whatsappLink FROM campaigns ORDER BY date ASC';
 
       connection.query(query, (err, results) => {
         connection.release();
@@ -157,7 +157,6 @@ router.get('/all', verifyToken, (req, res) => {
     }
   });
 });
-
 
 router.get('/:campaignId', verifyToken, (req, res) => {
   pool.getConnection((err, connection) => {
@@ -239,50 +238,6 @@ router.post('/volunteer/:campaignId', verifyToken, (req, res) => {
 });
 
 router.get('/joined/:campaignId', verifyToken, (req, res) => {
-  const campaignId = req.params.campaignId;
-  const userId = req.userId;
-
-  // Check if the campaign exists
-  pool.query('SELECT * FROM campaigns WHERE id = ?', [campaignId], (err, campaignResults) => {
-    if (err) {
-      return res.status(500).json({ error: true, message: 'Failed to execute query' });
-    }
-    if (campaignResults.length === 0) {
-      return res.status(404).json({ error: true, message: 'Campaign not found' });
-    }
-
-    // Get the campaign details
-    const campaign = campaignResults[0];
-    const { id, latitude, longitude } = campaign;
-
-    // Check if the user is a participant
-    pool.query(
-      'SELECT users.id AS userId, users.name FROM campaign_participants JOIN users ON campaign_participants.user_id = users.id WHERE campaign_participants.campaign_id = ?',
-      [campaignId],
-      (err, participantResults) => {
-        if (err) {
-          return res.status(500).json({ error: true, message: 'Failed to execute query' });
-        }
-
-        const userList = participantResults.map((participant) => ({
-          userId: participant.userId,
-          name: participant.name,
-        }));
-
-        return res.status(200).json({
-          error: false,
-          message: 'Campaign details fetched successfully',
-          campaignId: id,
-          latitude,
-          longitude,
-          userList,
-        });
-      }
-    );
-  });
-});
-
-router.get('/joined/:campaignId/get', verifyToken, (req, res) => {
   const campaignId = req.params.campaignId;
   const userId = req.userId;
 

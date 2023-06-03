@@ -81,6 +81,9 @@
                     <li class="nav-item"><a class="nav-link" href="#createCampaign">Create Campaign</a></li>
                     <li class="nav-item"><a class="nav-link" href="#getAllCampaign">Get All Campaign</a></li>
                     <li class="nav-item"><a class="nav-link" href="#getCampaignId">Get Campaign ID</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#joinCampaign">Join Campaign</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#getAllVolunteerbyCampaignId">Get All Volunteer by CampaignID</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#getAllVolunteerbyUserId">Get All Volunteer by UserID</a></li>
                 </ul>
             </nav>
             <div id="content" class="col">
@@ -248,6 +251,8 @@
         "contact": "string",
         "description": "string",
         "date": "string",
+        "location": "string",
+        "whatsappLink": "string",
         "photoEvent": file
     }
                             </pre>
@@ -289,6 +294,8 @@
                 "contact": "08119273405",
                 "description": "sungai wakanda",
                 "date": "2023-05-28T00:00:00.000Z"
+                "location": "JL. Wakanda No. 1",
+                "whatsappLink": "wa.me/group/blablablabla"
             },
             {
                 "id": 3,
@@ -301,6 +308,8 @@
                 "contact": "08xxxxxxxxxx",
                 "description": "sungai bangkit",
                 "date": "2023-05-29T00:00:00.000Z"
+                "location": "JL. Bangkit No. 1",
+                "whatsappLink": "wa.me/group/blablablabla"
             }
     }
                             </pre>
@@ -332,6 +341,119 @@
             "contact": "08xxxxxxxxxx",
             "description": "sungai bangkit",
             "date": "2023-05-29T00:00:00.000Z"
+            "location": "JL. Bangkit No. 1",
+            "whatsappLink": "wa.me/group/blablablabla"
+        }
+    }
+                            </pre>
+                    </div>
+                </div>
+
+                <div id="joinCampaign" class="card mb-4 anchor">
+                    <div class="card-body">
+                        <h2>Join Campaign</h2>
+                            <p><strong>URL</strong></p>
+                            <p><code>/joined/:campaignId</code></p>
+                            <p><strong>Method</strong></p>
+                            <p><code>POST</code></p>
+                            <p><strong>Request Body</strong></p>
+                            <pre>
+    {
+        "campaignId": 2,
+        "userId": 9
+    }
+                            </pre>
+                            <p><strong>Note</strong></p>
+                            <p><code>Include authorization token in headers.</code></p>
+                            <p><strong>Response</strong></p>
+                            <pre>
+    {
+        "error": false,
+        "message": "Joined the campaign successfully"
+    }
+                            </pre>
+                    </div>
+                </div>
+
+                <div id="getAllVolunteerbyCampaignId" class="card mb-4 anchor">
+                    <div class="card-body">
+                        <h2>Get All Volunteer by CampaignID</h2>
+                            <p><strong>URL</strong></p>
+                            <p><code>/api/campaign/joined/:eventId</code></p>
+                            <p><strong>Method</strong></p>
+                            <p><code>GET</code></p>
+                            <p><strong>Note</strong></p>
+                            <p><code>Include authorization token in headers.</code></p>
+                            <p><strong>Response</strong></p>
+                            <pre>
+    {
+        "error": false,
+        "message": "Campaign details fetched successfully",
+        "campaignId": 2,
+        "latitude": -2.113523,
+        "longitude": -1.631312,
+        "userList": [
+            {
+                "userId": 13,
+                "name": "admin"
+            },
+            {
+                "userId": 3,
+                "name": "Budi"
+            },
+            {
+                "userId": 9,
+                "name": "Testing"
+            }
+        ]
+    }
+                            </pre>
+                    </div>
+                </div>
+
+                <div id="getAllVolunteerbyUserId" class="card mb-4 anchor">
+                    <div class="card-body">
+                        <h2>Get All Volunteer by UserID</h2>
+                            <p><strong>URL</strong></p>
+                            <p><code>/api/campaign/volunteer/:userId</code></p>
+                            <p><strong>Method</strong></p>
+                            <p><code>GET</code></p>
+                            <p><strong>Note</strong></p>
+                            <p><code>Include authorization token in headers.</code></p>
+                            <p><strong>Response</strong></p>
+                            <pre>
+    {
+        "error": false,
+        "message": "User volunteer data retrieved successfully",
+        "userData": {
+            "userId": 9,
+            "name": "Testing",
+            "eventList": [
+                {
+                    "campaigntId": 2,
+                    "campaignTitle": "Relawan Sungai Wakanda",
+                    "campaigntName": "hasibuan",
+                    "campaignCreatorId": 6,
+                    "campaignPhoto": "https://storage.googleapis.com/relaverse/1685222251181-images.jpeg",
+                    "campaignLat": -2.113523,
+                    "campaignLon": -1.631312,
+                    "campaignContact": "08119273405",
+                    "campaignDescription": "sungai wakanda",
+                    "campaignDate": "2023-05-28T00:00:00.000Z"
+                },
+                {
+                    "campaigntId": 3,
+                    "campaignTitle": "Relawan Sungai Bangkit",
+                    "campaigntName": "testing",
+                    "campaignCreatorId": 9,
+                    "campaignPhoto": "https://storage.googleapis.com/relaverse/1685262224838-img.jpg",
+                    "campaignLat": -3.131251,
+                    "campaignLon": -2.352212,
+                    "campaignContact": "08xxxxxxxxxx",
+                    "campaignDescription": "sungai bangkit",
+                    "campaignDate": "2023-05-29T00:00:00.000Z"
+                }
+            ]
         }
     }
                             </pre>
