@@ -50,7 +50,7 @@ router.post('/', (req, res) => {
                             if (err) {
                               res.status(500).json({ error: true, message: 'Failed to execute query' });
                             } else {
-                              const token = jwt.sign({ id: results.insertId }, 'secret-key', { expiresIn: '1h' });
+                              const token = jwt.sign({ id: results.insertId }, 'secret-key', { expiresIn: '1w' });
                               res.status(201).json({ error: false, message: 'User registered successfully', token });
                             }
                           });

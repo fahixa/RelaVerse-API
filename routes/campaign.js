@@ -138,7 +138,7 @@ router.get('/all', verifyToken, (req, res) => {
     if (err) {
       res.status(500).json({ error: true, message: 'Failed to connect to database', detail: err.message });
     } else {
-      const query = 'SELECT id, title, name, userId, photoEvent, latitude as lat, longitude as lon, contact, description, date, location, whatsappLink FROM campaigns';
+      const query = 'SELECT id, title, name, userId, photoEvent, latitude as lat, longitude as lon, contact, description, date, location, whatsappLink FROM campaigns ORDER BY date ASC';
 
       connection.query(query, (err, results) => {
         connection.release();
@@ -157,7 +157,6 @@ router.get('/all', verifyToken, (req, res) => {
     }
   });
 });
-
 
 router.get('/:campaignId', verifyToken, (req, res) => {
   pool.getConnection((err, connection) => {
