@@ -329,6 +329,55 @@ router.get('/volunteer/:userId', verifyToken, (req, res) => {
   });
 });
 
+router.get('/my-campaigns/:userId', verifyToken, (req, res) => {
+  const userId = req.userId;
+
+  // Check if the user exists
+  pool.query('SELECT * FROM users WHERE id = ?', [userId], (err, userResults) => {
+    if (err) {
+      return res.status(500).json({ error: true, message: 'Failed to execute query' });
+    }
+    if (userResults.length === 0) {
+      return res.status(404).json({ error: true, message: 'User not found' });
+    }
+
+    // Get the user's campaigns
+    const query = `
+      SELECT
+        id,
+        title,
+        name,
+        userId,
+        photoEvent,
+        latitude as lat,
+        longitude as lon,
+        contact,
+        description,
+        date,
+        location,
+        whatsappLink
+      FROM
+        campaigns
+      WHERE
+        userId = ?;
+    `;
+
+    pool.query(query, [userId], (err, campaignResults) => {
+      if (err) {
+        return res.status(500).json({ error: true, message: 'Failed to execute query' });
+      }
+
+      const campaigns = campaignResults.map((campaign) => {
+        campaign.lat = campaign.lat ? campaign.lat : null;
+        campaign.lon = campaign.lon ? campaign.lon : null;
+        return campaign;
+      });
+
+      res.status(200).json({ error: false, message: 'User campaigns fetched successfully', campaigns });
+    });
+  });
+});
+
 
 
 
