@@ -296,16 +296,18 @@ router.get('/volunteer/:userId', verifyToken, (req, res) => {
     // Get the user's volunteer events
     const query = `
       SELECT
-        c.id AS campaigntId,
-        c.title AS campaignTitle,
-        c.name AS campaigntName,
-        c.userId AS campaignCreatorId,
-        c.photoEvent AS campaignPhoto,
-        c.latitude AS campaignLat,
-        c.longitude AS campaignLon,
-        c.contact AS campaignContact,
-        c.description AS campaignDescription,
-        c.date AS campaignDate
+        c.id AS id,
+        c.title AS title,
+        c.name AS name,
+        c.userId AS userId,
+        c.photoEvent AS photoEvent,
+        c.latitude AS latitude,
+        c.longitude AS longitude,
+        c.contact AS contact,
+        c.description AS description,
+        c.date AS date,
+        c.location AS location,
+        c.whatsappLink AS whatsapplink
       FROM
         campaign_participants AS cp
         JOIN campaigns AS c ON cp.campaign_id = c.id
