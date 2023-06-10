@@ -380,8 +380,127 @@ router.get('/my-campaigns/:userId', verifyToken, (req, res) => {
   });
 });
 
+// Leave Campaign
+// Add the following route handler below the existing code in the file
+router.delete('/leavecampaign/:campaignId', verifyToken, (req, res) => {
+  const campaignId = req.params.campaignId;
+  const userId = req.userId;
 
+  // Check if the campaign exists
+  pool.query('SELECT * FROM campaigns WHERE id = ?', [campaignId], (err, campaignResults) => {
+    if (err) {
+      return res.status(500).json({ error: true, message: 'Failed to execute query' });
+    }
+    if (campaignResults.length === 0) {
+      return res.status(404).json({ error: true, message: 'Campaign not found' });
+    }
 
+    // Check if the user exists
+    pool.query('SELECT * FROM users WHERE id = ?', [userId], (err, userResults) => {
+      if (err) {
+        return res.status(500).json({ error: true, message: 'Failed to execute query' });
+      }
+      if (userResults.length === 0) {
+        return res.status(404).json({ error: true, message: 'User not found' });
+      }
 
+      // Check if the user is a participant
+      pool.query(
+        'SELECT * FROM campaign_participants WHERE campaign_id = ? AND user_id = ?',
+        [campaignId, userId],
+        (err, participantResults) => {
+          if (err) {
+            return res.status(500).json({ error: true, message: 'Failed to execute query' });
+          }
+          if (participantResults.length === 0) {
+            return res.status(400).json({ error: true, message: 'User is not a participant of the campaign' });
+          }
+
+          // Remove the user as a participant
+          pool.query(
+            'DELETE FROM campaign_participants WHERE campaign_id = ? AND user_id = ?',
+            [campaignId, userId],
+            (err) => {
+              if (err) {
+                return res.status(500).json({ error: true, message: 'Failed to execute query' });
+              }
+
+              return res.status(200).json({ error: false, message: 'Successfully left the campaign' });
+            }
+          );
+        }
+      );
+    });
+  });
+});
+
+router.delete('/delete/:campaignId', verifyToken, (req, res) => {
+  const campaignId = req.params.campaignId;
+  const userId = req.userId;
+
+  // Check if the campaign exists
+  pool.query('SELECT * FROM campaigns WHERE id = ?', [campaignId], (err, campaignResults) => {
+    if (err) {
+      return res.status(500).json({ error: true, message: 'Failed to execute query' });
+    }
+
+    if (campaignResults.length === 0) {
+      return res.status(404).json({ error: true, message: 'Campaign not found' });
+    }
+
+    const campaign = campaignResults[0];
+
+    // Check if the user is the owner of the campaign
+    if (campaign.userId !== userId) {
+      return res.status(401).json({ error: true, message: 'Unauthorized' });
+    }
+
+    // Delete the campaign and remove participants
+    pool.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: true, message: 'Failed to establish database connection' });
+      }
+
+      connection.beginTransaction((err) => {
+        if (err) {
+          connection.release();
+          return res.status(500).json({ error: true, message: 'Failed to begin transaction' });
+        }
+
+        // Delete participants from the campaign
+        connection.query('DELETE FROM campaign_participants WHERE campaign_id = ?', [campaignId], (err, deleteParticipantsResult) => {
+          if (err) {
+            connection.rollback(() => {
+              connection.release();
+              return res.status(500).json({ error: true, message: 'Failed to delete participants' });
+            });
+          }
+
+          // Delete the campaign
+          connection.query('DELETE FROM campaigns WHERE id = ?', [campaignId], (err, deleteCampaignResult) => {
+            if (err) {
+              connection.rollback(() => {
+                connection.release();
+                return res.status(500).json({ error: true, message: 'Failed to delete campaign' });
+              });
+            }
+
+            connection.commit((err) => {
+              if (err) {
+                connection.rollback(() => {
+                  connection.release();
+                  return res.status(500).json({ error: true, message: 'Failed to commit transaction' });
+                });
+              }
+
+              connection.release();
+              return res.status(200).json({ success: true, message: 'Campaign deleted successfully' });
+            });
+          });
+        });
+      });
+    });
+  });
+});
 
 module.exports = router;
