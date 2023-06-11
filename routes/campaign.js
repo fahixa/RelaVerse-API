@@ -6,6 +6,7 @@ const pool = require('../config/db');
 const verifyToken = require('../middleware/verifyToken');
 const { Storage } = require('@google-cloud/storage');
 const path = require('path');
+const { makePrediction } = require('./model');
 
 const storage = new Storage({
   keyFilename: path.join(__dirname, "../keys/bangkit-386813-0aa8ddedf7ae.json"),
@@ -51,34 +52,44 @@ router.post('/', upload.single('photoEvent'), verifyToken, async (req, res, next
       return res.status(400).json({ error: true, message: error.details[0].message });
     }
 
-    if (!req.file) {
-      return res.status(400).json({ error: true, message: 'photoEvent is required' });
-    }
-
-    if (req.file.size > 1024 * 1024 * 5) {
-      return res.status(400).json({ error: true, message: 'File size is too large. Maximum size is 5MB.' });
-    }
-
-    const newFileName = Date.now() + "-" + req.file.originalname;
-    const fileUpload = bucket.file(newFileName);
-
-    const blobStream = fileUpload.createWriteStream({
-      metadata: {
-        contentType: req.file.mimetype
+    makePrediction(title).then(predictionData => {
+      const prediction = predictionData;
+      if (prediction < 0.7) {
+        return res.status(400).json({ error: true, message: 'The campaign title is not appropriate' });
       }
-    });
+      
+      if (!req.file) {
+        return res.status(400).json({ error: true, message: 'photoEvent is required' });
+      }
 
-    blobStream.on("error", (error) => {
-      console.error('Something went wrong!', error);
-      return res.status(500).json({ error: true, message: "Something went wrong uploading your file" });
-    });
+      if (req.file.size > 1024 * 1024 * 5) {
+        return res.status(400).json({ error: true, message: 'File size is too large. Maximum size is 5MB.' });
+      }
 
-    blobStream.on("finish", () => {
-      const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`;
-      createCampaign(publicUrl);
-    });
+      const newFileName = Date.now() + "-" + req.file.originalname;
+      const fileUpload = bucket.file(newFileName);
 
-    blobStream.end(req.file.buffer);
+      const blobStream = fileUpload.createWriteStream({
+        metadata: {
+          contentType: req.file.mimetype
+        }
+      });
+
+      blobStream.on("error", (error) => {
+        console.error('Something went wrong!', error);
+        return res.status(500).json({ error: true, message: "Something went wrong uploading your file" });
+      });
+
+      blobStream.on("finish", () => {
+        const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`;
+        createCampaign(publicUrl);
+      });
+
+      blobStream.end(req.file.buffer);
+    }).catch(err => {
+      console.error('An error occurred during prediction', err);
+      return res.status(500).json({ error: true, message: 'An error occurred during prediction' });
+    });
 
     function createCampaign(photoEvent) {
       pool.getConnection((err, connection) => {
@@ -183,13 +194,10 @@ router.get('/:campaignId', verifyToken, (req, res) => {
   });
 });
 
-
-// Add the following route handler below the existing code in the file
 router.post('/volunteer/:campaignId', verifyToken, (req, res) => {
   const campaignId = req.params.campaignId;
   const userId = req.userId;
 
-  // Check if the campaign exists
   pool.query('SELECT * FROM campaigns WHERE id = ?', [campaignId], (err, campaignResults) => {
     if (err) {
       return res.status(500).json({ error: true, message: 'Failed to execute query' });
@@ -198,7 +206,6 @@ router.post('/volunteer/:campaignId', verifyToken, (req, res) => {
       return res.status(404).json({ error: true, message: 'Campaign not found' });
     }
 
-    // Check if the user exists
     pool.query('SELECT * FROM users WHERE id = ?', [userId], (err, userResults) => {
       if (err) {
         return res.status(500).json({ error: true, message: 'Failed to execute query' });
@@ -207,7 +214,6 @@ router.post('/volunteer/:campaignId', verifyToken, (req, res) => {
         return res.status(404).json({ error: true, message: 'User not found' });
       }
 
-      // Check if the user is already a participant
       pool.query(
         'SELECT * FROM campaign_participants WHERE campaign_id = ? AND user_id = ?',
         [campaignId, userId],
@@ -219,7 +225,6 @@ router.post('/volunteer/:campaignId', verifyToken, (req, res) => {
             return res.status(400).json({ error: true, message: 'User is already a participant' });
           }
 
-          // Add the user as a participant
           pool.query(
             'INSERT INTO campaign_participants (campaign_id, user_id) VALUES (?, ?)',
             [campaignId, userId],
@@ -241,7 +246,6 @@ router.get('/joined/:campaignId', verifyToken, (req, res) => {
   const campaignId = req.params.campaignId;
   const userId = req.userId;
 
-  // Check if the campaign exists
   pool.query('SELECT * FROM campaigns WHERE id = ?', [campaignId], (err, campaignResults) => {
     if (err) {
       return res.status(500).json({ error: true, message: 'Failed to execute query' });
@@ -250,11 +254,9 @@ router.get('/joined/:campaignId', verifyToken, (req, res) => {
       return res.status(404).json({ error: true, message: 'Campaign not found' });
     }
 
-    // Get the campaign details
     const campaign = campaignResults[0];
     const { id, latitude, longitude } = campaign;
 
-    // Check if the user is a participant
     pool.query(
       'SELECT users.id AS userId, users.name FROM campaign_participants JOIN users ON campaign_participants.user_id = users.id WHERE campaign_participants.campaign_id = ?',
       [campaignId],
@@ -284,7 +286,6 @@ router.get('/joined/:campaignId', verifyToken, (req, res) => {
 router.get('/volunteer/:userId', verifyToken, (req, res) => {
   const userId = req.params.userId;
 
-  // Check if the user exists
   pool.query('SELECT * FROM users WHERE id = ?', [userId], (err, userResults) => {
     if (err) {
       return res.status(500).json({ error: true, message: 'Failed to execute query' });
@@ -293,7 +294,6 @@ router.get('/volunteer/:userId', verifyToken, (req, res) => {
       return res.status(404).json({ error: true, message: 'User not found' });
     }
 
-    // Get the user's volunteer events
     const query = `
       SELECT
         c.id AS id,
@@ -334,7 +334,6 @@ router.get('/volunteer/:userId', verifyToken, (req, res) => {
 router.get('/my-campaigns/:userId', verifyToken, (req, res) => {
   const userId = req.userId;
 
-  // Check if the user exists
   pool.query('SELECT * FROM users WHERE id = ?', [userId], (err, userResults) => {
     if (err) {
       return res.status(500).json({ error: true, message: 'Failed to execute query' });
@@ -343,7 +342,6 @@ router.get('/my-campaigns/:userId', verifyToken, (req, res) => {
       return res.status(404).json({ error: true, message: 'User not found' });
     }
 
-    // Get the user's campaigns
     const query = `
       SELECT
         id,
@@ -380,8 +378,6 @@ router.get('/my-campaigns/:userId', verifyToken, (req, res) => {
   });
 });
 
-// Leave Campaign
-// Add the following route handler below the existing code in the file
 router.delete('/leavecampaign/:campaignId', verifyToken, (req, res) => {
   const campaignId = req.params.campaignId;
   const userId = req.userId;
@@ -438,7 +434,6 @@ router.delete('/delete/:campaignId', verifyToken, (req, res) => {
   const campaignId = req.params.campaignId;
   const userId = req.userId;
 
-  // Check if the campaign exists
   pool.query('SELECT * FROM campaigns WHERE id = ?', [campaignId], (err, campaignResults) => {
     if (err) {
       return res.status(500).json({ error: true, message: 'Failed to execute query' });
@@ -450,12 +445,10 @@ router.delete('/delete/:campaignId', verifyToken, (req, res) => {
 
     const campaign = campaignResults[0];
 
-    // Check if the user is the owner of the campaign
     if (campaign.userId !== userId) {
       return res.status(401).json({ error: true, message: 'Unauthorized' });
     }
 
-    // Delete the campaign and remove participants
     pool.getConnection((err, connection) => {
       if (err) {
         return res.status(500).json({ error: true, message: 'Failed to establish database connection' });
@@ -467,7 +460,6 @@ router.delete('/delete/:campaignId', verifyToken, (req, res) => {
           return res.status(500).json({ error: true, message: 'Failed to begin transaction' });
         }
 
-        // Delete participants from the campaign
         connection.query('DELETE FROM campaign_participants WHERE campaign_id = ?', [campaignId], (err, deleteParticipantsResult) => {
           if (err) {
             connection.rollback(() => {
@@ -476,7 +468,6 @@ router.delete('/delete/:campaignId', verifyToken, (req, res) => {
             });
           }
 
-          // Delete the campaign
           connection.query('DELETE FROM campaigns WHERE id = ?', [campaignId], (err, deleteCampaignResult) => {
             if (err) {
               connection.rollback(() => {
