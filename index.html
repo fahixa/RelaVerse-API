@@ -60,8 +60,8 @@
         .anchor:before {
             content: "";
             display: block;
-            height: 70px; /* sesuaikan dengan tinggi navbar Anda */
-            margin: -70px 0 0; /* nilainya harus negatif dan sama dengan height */
+            height: 70px; 
+            margin: -70px 0 0;
         }
     </style>
 </head>
@@ -83,7 +83,11 @@
                     <li class="nav-item"><a class="nav-link" href="#getCampaignId">Get Campaign ID</a></li>
                     <li class="nav-item"><a class="nav-link" href="#joinCampaign">Join Campaign</a></li>
                     <li class="nav-item"><a class="nav-link" href="#getAllVolunteerbyCampaignId">Get All Volunteer by CampaignID</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#getAllVolunteerbyUserId">Get All Volunteer by UserID</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#getAllCampaignbyUserId">Get All Campaign by UserID</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#showAllCampaignbyUserId">Show All User Campaign by UserID</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#leaveCampaign">Leave Campaign</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#deleteCampaign">Delete Campaign</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#editUserProfile">Edit User Profile</a></li>
                 </ul>
             </nav>
             <div id="content" class="col">
@@ -410,9 +414,9 @@
                     </div>
                 </div>
 
-                <div id="getAllVolunteerbyUserId" class="card mb-4 anchor">
+                <div id="getAllCampaignbyUserId" class="card mb-4 anchor">
                     <div class="card-body">
-                        <h2>Get All Volunteer by UserID</h2>
+                        <h2>Get All Campaign by UserID</h2>
                             <p><strong>URL</strong></p>
                             <p><code>/api/campaign/volunteer/:userId</code></p>
                             <p><strong>Method</strong></p>
@@ -458,9 +462,121 @@
                             </pre>
                     </div>
                 </div>
+                <div id="showAllCampaignbyUserId" class="card mb-4 anchor">
+                    <div class="card-body">
+                        <h2>Show All User Campaign by UserID</h2>
+                            <p><strong>URL</strong></p>
+                            <p><code>/my-campaigns/:userId</code></p>
+                            <p><strong>Method</strong></p>
+                            <p><code>GET</code></p>
+                            <p><strong>Note</strong></p>
+                            <p><code>Include authorization token in headers.</code></p>
+                            <p><strong>Response</strong></p>
+                            <pre>
+    {
+        "error": false,
+        "message": "User campaigns fetched successfully",
+        "campaigns": [
+            {
+                "id": 12,
+                "title": "Gotong Royong Pembersihan Sungai Citarum",
+                "name": "Aimar Rizki",
+                "userId": 5,
+                "photoEvent": "https://storage.googleapis.com/relaverse/1685802049137-SungaiCitarum.jpg",
+                "lat": -2.542123,
+                "lon": -1.454123,
+                "contact": "085155489322",
+                "description": "Kegiatan gotong royong untuk membersihkan sungai ciliwung agar kebersihan air Ibu Kota terjaga",
+                "date": "2023-06-26T17:00:00.000Z",
+                "location": "Bandung, Jawa Barat",
+                "whatsappLink": "https://chat.whatsapp.com/I6QwDZrj1133xPwmJ7wh81"
+            },
+            {
+                "id": 13,
+                "title": "Gotong Royong Pembersihan Kali Sunter",
+                "name": "Aimar Rizki",
+                "userId": 5,
+                "photoEvent": "https://storage.googleapis.com/relaverse/1685802184528-KaliSunter.jpg",
+                "lat": -2.542123,
+                "lon": -1.454123,
+                "contact": "085155489322",
+                "description": "Kegiatan gotong royong untuk membersihkan Kali Sunter  agar kebersihan air Ibu Kota terjaga",
+                "date": "2023-06-26T17:00:00.000Z",
+                "location": "Bandung, Jawa Barat",
+                "whatsappLink": "https://chat.whatsapp.com/I6QwDZrj1133xPwmJ7wh81"
+            }
+        ]
+    }
+                            </pre>
+                    </div>
+                </div>
+
+                <div id="leaveCampaign" class="card mb-4 anchor">
+                    <div class="card-body">
+                        <h2>Leave Campaign</h2>
+                            <p><strong>URL</strong></p>
+                            <p><code>/api/campaign/leavecampaign/:campaignId</code></p>
+                            <p><strong>Method</strong></p>
+                            <p><code>DELETE</code></p>
+                            <p><strong>Note</strong></p>
+                            <p><code>Include authorization token in headers.</code></p>
+                            <p><strong>Response</strong></p>
+                            <pre>
+    {
+        "error": false,
+        "message": "Successfully left the campaign"
+    }   
+                            </pre>
+                    </div>
+                </div>
+
+                <div id="deleteCampaign" class="card mb-4 anchor">
+                    <div class="card-body">
+                        <h2>Delete Campaign</h2>
+                            <p><strong>URL</strong></p>
+                            <p><code>/api/campaign/leavecampaign/:campaignId</code></p>
+                            <p><strong>Method</strong></p>
+                            <p><code>DELETE</code></p>
+                            <p><strong>Note</strong></p>
+                            <p><code>Include authorization token in headers.</code></p>
+                            <p><strong>Response</strong></p>
+                            <pre>
+    {
+        "success": true,
+        "message": "Campaign deleted successfully"
+    }           
+                            </pre>
+                    </div>
+                </div>
+
+                <div id="editUserProfile" class="card mb-4 anchor">
+                    <div class="card-body">
+                        <h2>Edit User Profile</h2>
+                            <p><strong>URL</strong></p>
+                            <p><code>/api/users/edit-profile/:id</code></p>
+                            <p><strong>Method</strong></p>
+                            <p><code>PUT</code></p>
+                            <p><strong>Note</strong></p>
+                            <p><code>Include authorization token in headers.</code></p>
+                            <p><strong>Request Body</strong></p>
+                            <pre>
+    {
+        "email" : "admin@bangkit.academy",
+        "name" : "Bangkit Academy",
+        "phoneNumber": "08123456789"
+    }     
+                            </pre>
+                            <p><strong>Response</strong></p>
+                            <pre>
+    {
+        "error": false,
+        "message": "Profile updated successfully"
+    }
+                            </pre>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 
